@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "autocomplete.h": "c",
+    "sstream": "c"
+  }
+}
