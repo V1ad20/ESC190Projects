@@ -43,6 +43,8 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename){
     int i = 0; // counter to set values in block
     while(fgets(line, sizeof(line), fp) != NULL){        
         strncpy((*terms)[i].term , get_word_str(line), 200);
+        (*terms)[i].term[strlen((*terms)[i].term) - 1] = '\0';
+
         (*terms)[i].weight = atof(line);
         i++;
     }
@@ -80,9 +82,6 @@ int highest_match(struct term *terms, int nterms, char *substr){
         // memset(prefix, 0, 4);
         strncpy(prefix, terms[mid].term, substrlen);
         prefix[substrlen] = '\0';
-        // printf("%d, %d, %d\n", left, mid, right);
-        // printf("%s, %s\n", prefix, substr);
-        // printf("%d\n\n", strcmp(prefix, substr));
 
         if(strcmp(prefix, substr) > 0){
             right = mid - 1;
@@ -118,7 +117,7 @@ void autocomplete(struct term **answer, int *n_answer, struct term *terms, int n
     qsort(*answer, *n_answer, sizeof(term), compare2);
 
     // for(int i = 0; i < *n_answer; i++){
-    //     printf("%s, %f\n",(*answer)[i].term, (*answer)[i].weight);
+    //     printf("%s has a weight of: %f\n",(*answer)[i].term, (*answer)[i].weight);
     // }
 }
 
