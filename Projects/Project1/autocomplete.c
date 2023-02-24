@@ -28,7 +28,7 @@ int compare(const void *a, const void *b){
 }
 
 void read_in_terms(struct term **terms, int *pnterms, char *filename){
-    FILE *fp = fopen("cities.txt", "r");
+    FILE *fp = fopen(filename , "r");
     char line[200];
 
     if(fp == NULL){ // checking if fp returns null
@@ -74,6 +74,10 @@ int lowest_match(struct term *terms, int nterms, char *substr){
 
     while(left <= right){
         mid = (left + right) / 2;
+
+        // printf("%d, %d, %d\n", left, mid, right);
+        // printf("%s, %s\n", substr, terms[mid].term);
+        // printf("%d\n\n", strcmp(substr, terms[mid].term));
 
         if(strcmp(substr, terms[mid].term) > 0){
             left = mid + 1;
@@ -134,24 +138,27 @@ void autocomplete(struct term **answer, int *n_answer, struct term *terms, int n
     qsort(*answer, *n_answer, sizeof(term), compare2);
 }
 
-int main(void)
-{
-    struct term *terms;
-    int nterms;
-    read_in_terms(&terms, &nterms, "cities.txt");
-    lowest_match(terms, nterms, "Tor");
-    highest_match(terms, nterms, "Tor");
+// int main(void)
+// {
+//     struct term *terms;
+//     int nterms;
+//     // read_in_terms(&terms, &nterms, "cities.txt");
+//     // lowest_match(terms, nterms, "Tor");
+//     // highest_match(terms, nterms, "Tor");
+//     read_in_terms(&terms, &nterms, "data_timing.txt");
+//     lowest_match(terms, nterms, "apl");
+//     highest_match(terms, nterms, "apl");
     
-    struct term *answer;
-    int n_answer;
-    autocomplete(&answer, &n_answer, terms, nterms, "Tor");
+//     struct term *answer;
+//     int n_answer;
+//     autocomplete(&answer, &n_answer, terms, nterms, "apl");
 
-    // for(int i = 0; i < n_answer; i++){
-    //     printf("%s has a weight of: %f\n",answer[i].term, answer[i].weight);
-    // }
+//     // for(int i = 0; i < n_answer; i++){
+//     //     printf("%s has a weight of: %f\n",answer[i].term, answer[i].weight);
+//     // }
 
-    //free allocated blocks here -- not required for the project, but good practice
-    free(terms);
-    free(answer);
-    return 0;
-}
+//     //free allocated blocks here -- not required for the project, but good practice
+//     free(terms);
+//     free(answer);
+//     return 0;
+// }
