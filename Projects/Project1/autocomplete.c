@@ -6,7 +6,6 @@
 
 int is_letter(char c){
     return !((c >= '0' && c <= '9') || (c == ' ')|| (c == '\t'));
-    // return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
 }
 
 char * get_word_str(char * str){    // returns the address in memory where the string starts
@@ -53,19 +52,19 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename){
 
     fclose(fp);
 
-    // making sorted file
-    FILE *fp2 = fopen("sortedcities.txt", "w");
+    // // making sorted file
+    // FILE *fp2 = fopen("sortedcities.txt", "w");
 
-    if(fp2 == NULL){ // checking if fp returns null
-        printf("Error opening file\n");
-        return;
-    }
+    // if(fp2 == NULL){ // checking if fp returns null
+    //     printf("Error opening file\n");
+    //     return;
+    // }
 
-    for(int i = 0; i < 93827; i++){
-        fprintf(fp2, "%s  %f\n",(*terms)[i].term, (*terms)[i].weight);
-    }
+    // for(int i = 0; i < 93827; i++){
+    //     fprintf(fp2, "%s  %f\n",(*terms)[i].term, (*terms)[i].weight);
+    // }
 
-    fclose(fp2);
+    // fclose(fp2);
 }
 
 int lowest_match(struct term *terms, int nterms, char *substr){
@@ -82,7 +81,7 @@ int lowest_match(struct term *terms, int nterms, char *substr){
             right = mid - 1;
         }
     }
-    printf("%d, %s\n", left, terms[left].term);
+    // printf("%d, %s\n", left, terms[left].term);
     return left;
 }
 
@@ -100,10 +99,6 @@ int highest_match(struct term *terms, int nterms, char *substr){
         strncpy(prefix, terms[mid].term, substrlen);
         prefix[substrlen] = '\0';
 
-        printf("%d, %d, %d\n", left, mid, right);
-        printf("%s, %s\n", prefix, substr);
-        printf("%d\n\n", strcmp(prefix, substr));
-
         if(strcmp(prefix, substr) > 0){
             right = mid - 1;
         } else{
@@ -111,7 +106,7 @@ int highest_match(struct term *terms, int nterms, char *substr){
         }
     }
 
-    printf("%d, %s\n", right, terms[right].term);
+    // printf("%d, %s\n", right, terms[right].term);
     return right;
 }
 
@@ -154,9 +149,6 @@ int main(void)
     // for(int i = 0; i < n_answer; i++){
     //     printf("%s has a weight of: %f\n",answer[i].term, answer[i].weight);
     // }
-
-
-    // printf("%d\n", strcmp("A", ","));
 
     //free allocated blocks here -- not required for the project, but good practice
     free(terms);
