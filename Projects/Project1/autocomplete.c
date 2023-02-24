@@ -5,7 +5,8 @@
 #include "autocomplete.h"
 
 int is_letter(char c){
-    return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+    return !((c >= '0' && c <= '9') || (c == ' ')|| (c == '\t'));
+    // return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
 }
 
 char * get_word_str(char * str){    // returns the address in memory where the string starts
@@ -41,7 +42,7 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename){
     *terms = (term *)malloc((*(pnterms)) * sizeof(term)); // malloc for terms
 
     int i = 0; // counter to set values in block
-    while(fgets(line, sizeof(line), fp) != NULL){        
+    while(fgets(line, sizeof(line), fp) != NULL){
         strncpy((*terms)[i].term , get_word_str(line), 200);
         (*terms)[i].term[strlen((*terms)[i].term) - 1] = '\0';
 
@@ -49,6 +50,22 @@ void read_in_terms(struct term **terms, int *pnterms, char *filename){
         i++;
     }
     qsort(*terms, *pnterms, sizeof(term), compare); // sorting in lexicographic order
+
+    fclose(fp);
+
+    // making sorted file
+    FILE *fp2 = fopen("sortedcities.txt", "w");
+
+    if(fp2 == NULL){ // checking if fp returns null
+        printf("Error opening file\n");
+        return;
+    }
+
+    for(int i = 0; i < 93827; i++){
+        fprintf(fp2, "%s  %f\n",(*terms)[i].term, (*terms)[i].weight);
+    }
+
+    fclose(fp2);
 }
 
 int lowest_match(struct term *terms, int nterms, char *substr){
@@ -65,7 +82,7 @@ int lowest_match(struct term *terms, int nterms, char *substr){
             right = mid - 1;
         }
     }
-    // printf("%d, %s", left, terms[left].term);
+    printf("%d, %s\n", left, terms[left].term);
     return left;
 }
 
@@ -83,13 +100,18 @@ int highest_match(struct term *terms, int nterms, char *substr){
         strncpy(prefix, terms[mid].term, substrlen);
         prefix[substrlen] = '\0';
 
+        printf("%d, %d, %d\n", left, mid, right);
+        printf("%s, %s\n", prefix, substr);
+        printf("%d\n\n", strcmp(prefix, substr));
+
         if(strcmp(prefix, substr) > 0){
             right = mid - 1;
         } else{
             left = mid + 1;
         }
     }
-    // printf("%d, %s", right, terms[right].term);
+
+    printf("%d, %s\n", right, terms[right].term);
     return right;
 }
 
@@ -115,25 +137,29 @@ void autocomplete(struct term **answer, int *n_answer, struct term *terms, int n
         (*answer)[i].weight = terms[lowest + i].weight;
     }
     qsort(*answer, *n_answer, sizeof(term), compare2);
-
-    // for(int i = 0; i < *n_answer; i++){
-    //     printf("%s has a weight of: %f\n",(*answer)[i].term, (*answer)[i].weight);
-    // }
 }
 
-// int main(void)
-// {
-//     struct term *terms;
-//     int nterms;
-//     read_in_terms(&terms, &nterms, "cities.txt");
-//     lowest_match(terms, nterms, "Tor");
-//     highest_match(terms, nterms, "Tor");
+int main(void)
+{
+    struct term *terms;
+    int nterms;
+    read_in_terms(&terms, &nterms, "cities.txt");
+    lowest_match(terms, nterms, "Tor");
+    highest_match(terms, nterms, "Tor");
     
-//     struct term *answer;
-//     int n_answer;
-//     autocomplete(&answer, &n_answer, terms, nterms, "Tor");
-//     //free allocated blocks here -- not required for the project, but good practice
-//     free(terms);
-//     free(answer);
-//     return 0;
-// }
+    struct term *answer;
+    int n_answer;
+    autocomplete(&answer, &n_answer, terms, nterms, "Tor");
+
+    // for(int i = 0; i < n_answer; i++){
+    //     printf("%s has a weight of: %f\n",answer[i].term, answer[i].weight);
+    // }
+
+
+    // printf("%d\n", strcmp("A", ","));
+
+    //free allocated blocks here -- not required for the project, but good practice
+    free(terms);
+    free(answer);
+    return 0;
+}
